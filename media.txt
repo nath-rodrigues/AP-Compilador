@@ -1,0 +1,37 @@
+:DEC
+nota1:REAL
+nota2:REAL
+media:REAL
+situacao:INT
+:PROG
+# Calcula a media de duas notas e classifica o aluno
+LER nota1
+LER nota2
+media := (nota1 + nota2) / 2
+
+SE media >= 7.0 OU media == 10.0 ENTAO
+INI
+	IMPRIMIR "Aprovado"
+	situacao := 1
+FIM
+SENAO
+INI
+	SE media < 7.0 E media >= 5.0 ENTAO
+	INI
+		IMPRIMIR "Recuperacao"
+		situacao := 2
+	FIM
+	SENAO
+	INI
+		IMPRIMIR "Reprovado"
+		situacao := 0
+	FIM
+FIM
+
+ENQTO situacao != 3
+INI
+	IMPRIMIR situacao
+	situacao := situacao + 1
+FIM
+
+IMPRIMIR media

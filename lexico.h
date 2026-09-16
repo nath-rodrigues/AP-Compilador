@@ -17,6 +17,7 @@ class Lexico{
         int *id;
         vector<int> pilha;   // buffer de caracteres "devolvidos" (lookahead)
         int linhaAtual;
+        ostream *saidaErro = nullptr; // arquivo de output, para tambem registrar os erros la
 
         // le o proximo caractere, respeitando o buffer de lookahead,
         // e mantem o contador de linha atualizado
@@ -44,7 +45,11 @@ class Lexico{
         }
 
         void erroLexico(int linha, const string &lexema){
-            cout << "Erro Léxico na linha " << linha << ": Desconhecido \"" << lexema << "\"" << endl;
+            string msg = "Erro Léxico na linha " + to_string(linha) + ": Desconhecido \"" + lexema + "\"";
+            cout << msg << endl;
+            if(saidaErro != nullptr){
+                (*saidaErro) << msg << endl;
+            }
         }
 
     public:
@@ -52,6 +57,11 @@ class Lexico{
             id = new int(0);
             arq = new LeitorArquivo(arquivo);
             linhaAtual = 1;
+        }
+
+        // define o arquivo de saida onde os erros tambem devem ser gravados
+        void setSaidaErro(ostream &saida){
+            saidaErro = &saida;
         }
 
         Token* proximoToken(){
@@ -171,6 +181,7 @@ class Lexico{
                 if(ch == '"'){
                     string bruto;   // texto lido, incluindo a aspa inicial (usado so na mensagem de erro)
                     string lexema;  // conteudo da string, sem as aspas
+                    // isso eh pra exemplos retornam strings
                     bruto += ch;
 
                     bool fechado = false;

@@ -28,6 +28,7 @@ int main(int argc, char* argv[]){
 
     string caminhoSaida = "output/" + nomeBase(argv[1]) + ".txt";
     ofstream saida(caminhoSaida);
+    lex.setSaidaErro(saida);
 
     Token * t = lex.proximoToken();
     while(t != nullptr){

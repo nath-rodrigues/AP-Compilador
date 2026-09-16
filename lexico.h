@@ -15,7 +15,7 @@ class Lexico{
     private:
         LeitorArquivo *arq;
         int *id;
-        vector<int> pilha;   // buffer de caracteres "devolvidos" (lookahead)
+        vector<int> pilha;   // buffer de caracteres "devolvidos"
         int linhaAtual;
         ostream *saidaErro = nullptr; // arquivo de output, para tambem registrar os erros la
 

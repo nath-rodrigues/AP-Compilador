@@ -23,17 +23,19 @@ string nomeBase(const string &caminho){
     return caminho.substr(inicio, fim - inicio);
 }
 
+// cria o analisador lexico
 int main(int argc, char* argv[]){
     Lexico lex(argv[1]);
 
-    string caminhoSaida = "output/" + nomeBase(argv[1]) + ".txt";
-    ofstream saida(caminhoSaida);
+    // arq de saida no ouput
+    string caminhoSaida = "output/" + nomeBase(argv[1]) + ".txt"; // nome base do arq
+    ofstream saida(caminhoSaida); // escreve no arq de saida
     lex.setSaidaErro(saida);
 
     Token * t = lex.proximoToken();
     while(t != nullptr){
-        cout << t -> toString() << endl;
-        saida << t -> toString() << endl;
+        cout << t -> toString() << endl; // imprime formatado no terminal
+        saida << t -> toString() << endl; // escreve no arq de saida
         delete t;
         t = lex.proximoToken();
     }

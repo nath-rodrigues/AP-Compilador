@@ -16,6 +16,7 @@ Parte 1 do compilador: reconhece os tokens de um programa em GYH e imprime no te
 ```bash
 g++ -o compilador main.cpp
 ./compilador testes/fatorial.txt
+./compilador testes/programa0.gyh
 ```
 
 Saída: tokens no formato `<TIPO, "lexema">`, terminando em `<EOF>`.

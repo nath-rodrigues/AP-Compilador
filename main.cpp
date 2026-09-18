@@ -8,7 +8,22 @@
 #include <string>
 #include "lexico.h"
 
+#ifdef _WIN32
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#endif
+
 using namespace std;
+
+// cria a pasta output caso ela ainda nao exista
+void criarPastaOutput(){
+#ifdef _WIN32
+    _mkdir("output");
+#else
+    mkdir("output", 0777);
+#endif
+}
 
 // extrai o nome do arquivo (sem pasta e sem extensao) a partir do caminho de entrada
 string nomeBase(const string &caminho){
@@ -28,6 +43,7 @@ int main(int argc, char* argv[]){
     Lexico lex(argv[1]);
 
     // arq de saida no ouput
+    criarPastaOutput();
     string caminhoSaida = "output/" + nomeBase(argv[1]) + ".txt"; // nome base do arq
     ofstream saida(caminhoSaida); // escreve no arq de saida
     lex.setSaidaErro(saida);

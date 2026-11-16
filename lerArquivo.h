@@ -28,13 +28,18 @@ public:
         }
     }
 
+    bool aberto() {
+        return file.is_open();
+    }
+
     int lerProxCaracter() {
         int caractere = -1; // iniciliza
-        //le cada carctyere e devolve como numero 
+        //le cada carctyere e devolve como numero
         if (file.is_open()) {
             char c;
             if (file.get(c)) {
-                caractere = c;                 
+                // unsigned pra letra acentuada nao virar numero negativo (-1 eh so o EOF)
+                caractere = (unsigned char)c;
             } else {
                 caractere = -1;
             }
@@ -42,13 +47,5 @@ public:
 
         return caractere;
     }
-
-    // quando acaba o lexema le o prox carctere e devolve pro buffer
-    // na prox chamada ele vem de novo
-    void devolverCaracter() {
-        if (file.is_open()) {
-            file.unget();
-        }
-    } 
 };
 #endif

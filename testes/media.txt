@@ -1,37 +1,37 @@
-:DEC
-nota1:REAL
-nota2:REAL
-media:REAL
-situacao:INT
-:PROG
+[dec]
+Nota1(float)
+Nota2(float)
+Media(float)
+Situacao(integer)
+[prog]
 # Calcula a media de duas notas e classifica o aluno
-LER nota1
-LER nota2
-media := (nota1 + nota2) / 2
+read Nota1
+read Nota2
+Media << (Nota1 + Nota2) / 2
 
-SE media >= 7.0 OU media == 10.0 ENTAO
-INI
-	IMPRIMIR "Aprovado"
-	situacao := 1
-FIM
-SENAO
-INI
-	SE media < 7.0 E media >= 5.0 ENTAO
-	INI
-		IMPRIMIR "Recuperacao"
-		situacao := 2
-	FIM
-	SENAO
-	INI
-		IMPRIMIR "Reprovado"
-		situacao := 0
-	FIM
-FIM
+if Media >= 7.0 or Media == 10.0 then
+start
+	print "Aprovado"
+	Situacao << 1
+end
+else
+start
+	if Media < 7.0 and Media >= 5.0 then
+	start
+		print "Recuperacao"
+		Situacao << 2
+	end
+	else
+	start
+		print "Reprovado"
+		Situacao << 0
+	end
+end
 
-ENQTO situacao != 3
-INI
-	IMPRIMIR situacao
-	situacao := situacao + 1
-FIM
+while Situacao <> 3 then
+start
+	print Situacao
+	Situacao << Situacao + 1
+end
 
-IMPRIMIR media
+print Media

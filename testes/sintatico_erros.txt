@@ -1,0 +1,19 @@
+[dec]
+A(integer)
+B float)
+C(
+[prog]
+read
+A << (B + 2
+print 5
+if A B then A << 1
+if (A > B) and ((A + 1) * 2 <= C or A <> B) then
+start
+A << A +
+B << 2
+end
+else C << 1.5
+while A < 10
+A << A + 1
+end
+print "fim"

@@ -1,18 +1,18 @@
 #Erro Léxico: <_> caractere desconhecido
 
-:DEC
-parametro:INT
-fatorial:INT
+[dec]
+Parametro(integer)
+Fatorial(integer)
 
-:PROG 
+[prog]
 # Calcula o fatorial de um número inteiro
-LER parametro
-fatorial := parametro 
-SE parametro == 0 ENTAO fatorial := 1
-ENQTO parametro > 1
-INI
-fatorial := fatorial * (parametro _ 1) 
-parametro := parametro - 1
-FIM
-IMPRIMIR fatorial
-IMPRIMIR "Oi"
+read Parametro
+Fatorial << Parametro 
+if Parametro == 0 then Fatorial << 1
+while Parametro > 1 then
+start
+Fatorial << Fatorial * (Parametro _ 1) 
+Parametro << Parametro - 1
+end
+print Fatorial
+print "Oi"

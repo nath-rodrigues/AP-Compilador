@@ -1,0 +1,4 @@
+# todas as palavras e simbolos da linguagem, pra conferir o lexico
+dec prog integer float read print if else then while start end and or
+[ ] << ( ) * / + - < <= > >= == <>
+Var1 xY 10 7.5 "cadeia" decx integerr i

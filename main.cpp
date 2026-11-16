@@ -1,15 +1,18 @@
+// Nomes: Nathália Rodrigues (RA 2670097), Felipe Kenzo (RA 2669986)
 /*
- * Analisador Lexico - Linguagem GYH
- * Nomes: Nathália (RA 2670097), Felipe Higashi (RA 2669986)
+ * Analisador Sintatico - Linguagem GYH
+ * Tipo: descendente recursivo (TDP sem backtracking)
  */
 
 #include <iostream>
 #include <fstream>
 #include <string>
 #include "lexico.h"
+#include "sintatico.h"
 
 #ifdef _WIN32
 #include <direct.h>
+#include <windows.h>
 #else
 #include <sys/stat.h>
 #endif
@@ -38,25 +41,65 @@ string nomeBase(const string &caminho){
     return caminho.substr(inicio, fim - inicio);
 }
 
-// cria o analisador lexico
-int main(int argc, char* argv[]){
-    Lexico lex(argv[1]);
-
-    // arq de saida no ouput
-    criarPastaOutput();
-    string caminhoSaida = "output/" + nomeBase(argv[1]) + ".txt"; // nome base do arq
-    ofstream saida(caminhoSaida); // escreve no arq de saida
-    lex.setSaidaErro(saida);
-
-    Token * t = lex.proximoToken();
-    while(t != nullptr){
-        cout << t -> toString() << endl; // imprime formatado no terminal
-        saida << t -> toString() << endl; // escreve no arq de saida
+// so a analise lexica: imprime os tokens no formato <Tipo, "lexema">
+void imprimirTokens(Lexico &lex){
+    Token *t = lex.proximoToken();
+    while(t->tipo != FimArquivo){
+        // token de erro nao eh impresso: a msg de erro ja saiu no lexico
+        if(t->tipo != Erro){
+            cout << t->toString() << endl;
+        }
         delete t;
         t = lex.proximoToken();
     }
-    cout << "<EOF>" << endl;
-    saida << "<EOF>" << endl;
+    cout << t->toString() << endl; // <EOF>
+    delete t;
+}
 
-    return 0;
+int main(int argc, char* argv[]){
+#ifdef _WIN32
+    SetConsoleOutputCP(65001); // acentos das mensagens no terminal do windows
+#endif
+
+    // com a opcao -t so roda o lexico e imprime a lista de tokens
+    bool soTokens = (argc >= 3 && argv[1][0] == '-' && argv[1][1] == 't');
+    if(argc < 2 || (argv[1][0] == '-' && !soTokens)){
+        cerr << "Uso: " << argv[0] << " [-t] <arquivo.gyh>" << endl;
+        return 1;
+    }
+    const char *arquivo = soTokens ? argv[2] : argv[1];
+
+    // o lexico entrega os tokens e o sintatico vai pedindo um por um
+    Lexico lex(arquivo);
+    if(!lex.arquivoAberto()){
+        return 1;
+    }
+
+    if(soTokens){
+        imprimirTokens(lex);
+        return lex.totalErros() == 0 ? 0 : 1;
+    }
+    Sintatico sint(lex);
+
+    // arq de saida no output (mesmas mensagens do terminal)
+    criarPastaOutput();
+    string caminhoSaida = "output/" + nomeBase(arquivo) + ".txt"; // nome base do arq
+    ofstream saida(caminhoSaida);
+    lex.setSaidaErro(saida);
+    sint.setSaidaErro(saida);
+
+    bool ok = sint.analisar();
+
+    string resultado;
+    if(ok){
+        resultado = "Análise sintática concluída: nenhum erro encontrado.";
+    } else {
+        resultado = "Análise concluída com erros: " +
+                    to_string(lex.totalErros()) + " léxico(s) e " +
+                    to_string(sint.totalErros()) + " sintático(s).";
+    }
+    cout << resultado << endl;
+    saida << resultado << endl;
+
+    return ok ? 0 : 1;
 }

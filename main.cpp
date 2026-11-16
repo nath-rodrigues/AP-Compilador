@@ -1,6 +1,6 @@
+// Nomes: Nathália Rodrigues (RA 2670097), Felipe Kenzo (RA 2669986)
 /*
  * Analisador Lexico - Linguagem GYH
- * Nomes: Nathália (RA 2670097), Felipe Higashi (RA 2669986)
  */
 
 #include <iostream>
@@ -10,6 +10,7 @@
 
 #ifdef _WIN32
 #include <direct.h>
+#include <windows.h>
 #else
 #include <sys/stat.h>
 #endif
@@ -40,7 +41,19 @@ string nomeBase(const string &caminho){
 
 // cria o analisador lexico
 int main(int argc, char* argv[]){
+#ifdef _WIN32
+    SetConsoleOutputCP(65001); // acentos das mensagens no terminal do windows
+#endif
+
+    if(argc < 2){
+        cerr << "Uso: " << argv[0] << " <arquivo.gyh>" << endl;
+        return 1;
+    }
+
     Lexico lex(argv[1]);
+    if(!lex.arquivoAberto()){
+        return 1;
+    }
 
     // arq de saida no ouput
     criarPastaOutput();
@@ -49,14 +62,22 @@ int main(int argc, char* argv[]){
     lex.setSaidaErro(saida);
 
     Token * t = lex.proximoToken();
-    while(t != nullptr){
+    while(t->tipo != FimArquivo && t->tipo != Erro){
         cout << t -> toString() << endl; // imprime formatado no terminal
         saida << t -> toString() << endl; // escreve no arq de saida
         delete t;
         t = lex.proximoToken();
     }
-    cout << "<EOF>" << endl;
-    saida << "<EOF>" << endl;
+
+    // erro lexico: a msg ja saiu no lexico e a analise eh interrompida ali
+    if(t->tipo == Erro){
+        delete t;
+        return 1;
+    }
+
+    cout << t -> toString() << endl; // <EOF>
+    saida << t -> toString() << endl;
+    delete t;
 
     return 0;
 }
